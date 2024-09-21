@@ -30,9 +30,19 @@ const connectDB = async () => {
 };
 
 export default async function handler(req, res) {
+  // CORS configuration
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Local development
+  res.setHeader('Access-Control-Allow-Origin', 'https://qhvpqmhj-3000.inc1.devtunnels.ms'); // DevTunnels URL
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.status(204).end(); // Respond to preflight requests
+    return;
+  }
+
   if (req.method === 'GET') {
     await connectDB();
-
     try {
       const users = await User.find(); // Fetch all users from the database
       res.status(200).json(users);
